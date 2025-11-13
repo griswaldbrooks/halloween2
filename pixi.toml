@@ -14,15 +14,25 @@ python = ">=3.8"
 requests = ">=2.25"
 
 [tasks]
-# Phase 0.1: trivial_math example
-test-trivial = "cmake -S. -B build/test -DBUILD_TESTS=ON && cmake --build build/test && ctest --test-dir build/test --output-on-failure"
-coverage-trivial = "cmake -S. -B build/coverage -DBUILD_TESTS=ON -DENABLE_COVERAGE=ON && cmake --build build/coverage && cd build/coverage && ctest && cd ../.. && mkdir -p coverage-html && gcovr -r . --sonarqube coverage.xml --html-details coverage-html/index.html --print-summary --exclude build --exclude '.*test.*'"
+# Phase 0: All examples (trivial_math, blink_led)
+test-all = "cmake -S. -B build/test -DBUILD_TESTS=ON && cmake --build build/test && ctest --test-dir build/test --output-on-failure"
+coverage-all = "cmake -S. -B build/coverage -DBUILD_TESTS=ON -DENABLE_COVERAGE=ON && cmake --build build/coverage && cd build/coverage && ctest && cd ../.. && mkdir -p coverage-html && gcovr -r . --sonarqube coverage.xml --html-details coverage-html/index.html --print-summary --exclude build --exclude '.*test.*'"
+view-coverage-all = "xdg-open coverage-html/index.html"
+
+# Phase 0.1: trivial_math only (deprecated, use test-all)
+test-trivial = "cmake -S. -B build/test -DBUILD_TESTS=ON && cmake --build build/test && ctest --test-dir build/test --output-on-failure -R trivial"
+coverage-trivial = "cmake -S. -B build/coverage -DBUILD_TESTS=ON -DENABLE_COVERAGE=ON && cmake --build build/coverage && cd build/coverage && ctest -R trivial && cd ../.. && mkdir -p coverage-html && gcovr -r . --sonarqube coverage.xml --html-details coverage-html/index.html --print-summary --exclude build --exclude '.*test.*'"
 view-coverage-trivial = "xdg-open coverage-html/index.html"
 
-# Convenience aliases
-test = { depends-on = ["test-trivial"] }
-coverage = { depends-on = ["coverage-trivial"] }
-view-coverage = { depends-on = ["view-coverage-trivial"] }
+# Phase 0.2: blink_led only
+test-blink = "cmake -S. -B build/test -DBUILD_TESTS=ON && cmake --build build/test && ctest --test-dir build/test --output-on-failure -R blink"
+coverage-blink = "cmake -S. -B build/coverage -DBUILD_TESTS=ON -DENABLE_COVERAGE=ON && cmake --build build/coverage && cd build/coverage && ctest -R blink && cd ../.. && mkdir -p coverage-html && gcovr -r . --sonarqube coverage.xml --html-details coverage-html/index.html --print-summary --exclude build --exclude '.*test.*'"
+view-coverage-blink = "xdg-open coverage-html/index.html"
+
+# Convenience aliases (default to all)
+test = { depends-on = ["test-all"] }
+coverage = { depends-on = ["coverage-all"] }
+view-coverage = { depends-on = ["view-coverage-all"] }
 
 # Cleanup
 clean = "rm -rf build coverage-html coverage.xml"
