@@ -10,6 +10,8 @@ cmake = ">=3.14"
 gtest = ">=1.14"
 gcovr = ">=7.0"
 compilers = "*"
+python = ">=3.8"
+requests = ">=2.25"
 
 [tasks]
 # Phase 0.1: trivial_math example
@@ -24,3 +26,8 @@ view-coverage = { depends-on = ["view-coverage-trivial"] }
 
 # Cleanup
 clean = "rm -rf build coverage-html coverage.xml"
+
+# Status checks (requires requests package and gh CLI)
+check-ci = "python tools/ci_check.py"
+check-sonarcloud = "python tools/sonarcloud_check.py --project griswaldbrooks_sonarcloud-cpp-minimal"
+status-check = "python tools/status.py"

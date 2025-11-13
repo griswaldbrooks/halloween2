@@ -207,6 +207,47 @@ When reporting results:
 - ❌ **Don't** rely on dashboard screenshots alone
 - ⚠️ **Be honest** about what cannot be verified (hardware behavior)
 
+## Development Tools
+
+### Status Checking
+
+Quick status check (both CI and SonarCloud):
+```bash
+pixi run status-check
+```
+
+Individual checks:
+```bash
+pixi run check-ci          # GitHub Actions status
+pixi run check-sonarcloud  # SonarCloud coverage/quality
+```
+
+Direct invocation:
+```bash
+python tools/status.py
+python tools/sonarcloud_check.py --project griswaldbrooks_sonarcloud-cpp-minimal
+python tools/ci_check.py
+```
+
+### Available Tools
+
+- **sonarcloud_check.py** - Check SonarCloud analysis status, coverage, quality gate
+- **ci_check.py** - Check GitHub Actions workflow runs and status
+- **status.py** - Combined status check (both CI and SonarCloud)
+
+See [tools/README.md](tools/README.md) for comprehensive documentation.
+
+### MCP Tools
+
+MCP (Model Context Protocol) tools are **not currently supported** in Claude Code's `.claude/` directory.
+
+Instead, we use:
+- **Pixi tasks** for command integration (see pixi.toml)
+- **Python scripts** for functionality (see tools/ directory)
+- **tools/README.md** for documentation
+
+See [tools/MCP_INVESTIGATION.md](tools/MCP_INVESTIGATION.md) for investigation details.
+
 ## Current Focus
 
 **Phase 0.1: trivial_math (Pure C++ Library)**
