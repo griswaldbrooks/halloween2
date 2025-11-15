@@ -133,23 +133,30 @@ All dependencies managed via Pixi - see `pixi.toml` for details.
 ## Current Status
 
 **Phase 0.1: trivial_math (Pure C++)**
-- Status: Complete
-- Implementation: ✅ Complete
-- Tests: ✅ Complete (3 tests)
-- Coverage: ✅ 100%
-- SonarCloud: Pending
+- Status: ✅ Complete
+- Implementation: ✅ 12 tests, all passing
+- Coverage: ✅ 100% (16/16 lines, 8/8 functions)
+- Pattern: Constexpr + runtime versions
+- Documentation: ✅ README with examples
+- CI/CD: ✅ Passing
+- SonarCloud: ✅ 100% coverage reported
 
 **Phase 0.2: blink_led (C++ + Arduino)**
-- Status: Complete
-- Implementation: ✅ Complete
-- .ino wrapper: ✅ 32 lines (15 LOC)
-- Tests: ✅ Complete (11 tests)
-- Coverage: ✅ 100%
-- Arduino compilation: Not tested
-- SonarCloud: Pending
+- Status: ✅ Complete
+- Implementation: ✅ Template-based dependency injection
+- .ino wrapper: ✅ 56 lines (minimal hardware adapter)
+- Tests: ✅ 11 tests, all passing
+- Coverage: ✅ 100% (22/22 lines, 7/7 functions, 6/6 branches)
+- Pattern: Header-only controller with OutputPin DI
+- Documentation: ✅ README with pattern guide
+- CI/CD: ✅ Passing
+- Arduino compilation: Not tested on hardware
+- SonarCloud: ✅ 100% coverage reported
 
 **Phase 0.3: web_trigger (JavaScript + C++ + Arduino)**
 - Status: Not started
+- Next priority: Implement multi-language integration pattern
+- Target: 80%+ coverage for both JS and C++
 
 See [docs/PHASE_0_EXAMPLES.md](docs/PHASE_0_EXAMPLES.md) for detailed progress.
 

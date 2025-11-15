@@ -1,225 +1,363 @@
-# Session Handoff - SonarCloud C++ Coverage Investigation
+# Halloween 2.0 Project Handoff
 
-## Session Summary
+## Current Status
 
-**Date:** 2025-11-12
-**Purpose:** Set up sonarcloud-cpp-minimal repo for next agent session after user adds GitHub secret
-**Status:** Ready for next session
+**Date:** 2025-11-14
+**Phase:** Phase 0 - Architecture Validation (In Progress)
+**Status:** Phase 0.1 and 0.2 Complete, Ready for Phase 0.3
 
-## What Was Done This Session
+## What Was Completed
 
-### 1. Created Minimal Reproduction Project
-- Simple C++ project with CMake, GoogleTest, gcovr
-- 2 source files (math_utils.h, math_utils.cpp)
-- 1 test file (test_math_utils.cpp)
-- Achieves 100% local coverage
+### Phase 0.1: trivial_math (Pure C++ Library)
+**Status:** ✅ Complete
 
-### 2. Configured CI/CD
-- GitHub Actions workflow: build, test, generate coverage, upload to SonarCloud
-- gcovr generates SonarQube XML format (coverage.xml)
-- SonarCloud scan action configured
+**Implementation:**
+- Header-only constexpr functions with runtime versions
+- GoogleTest tests: 12 tests, all passing
+- Coverage: 100% (16/16 lines, 8/8 functions)
+- Pattern validated: Pure C++ library builds and tests work
 
-### 3. Set Up Repository Structure
-- ✅ Code committed and pushed to GitHub
-- ✅ Agent configurations copied from halloween repo
-- ✅ Documentation created (CLAUDE.md, NEXT_AGENT_QUICKSTART.md, HANDOFF.md)
-- ✅ Ready for SonarCloud integration
+**Files:**
+- `lib/examples/trivial_math/include/trivial_math.h` - Constexpr + runtime functions
+- `lib/examples/trivial_math/src/trivial_math.cpp` - Runtime implementations
+- `lib/examples/trivial_math/test/test_trivial_math.cpp` - 12 comprehensive tests
+- `lib/examples/trivial_math/README.md` - Complete documentation
 
-### 4. Documentation Created
+**Key Achievements:**
+- CMake configuration works correctly
+- GoogleTest integration functional
+- gcov/gcovr generates coverage reports
+- Constexpr + runtime pattern proven
+- Foundation for all future C++ libraries established
 
-**Files created:**
-- `CLAUDE.md` - Project conventions, context, purpose, tools
-- `NEXT_AGENT_QUICKSTART.md` - Quick start for next agent with step-by-step task
-- `HANDOFF.md` - This file, session summary and handoff notes
-- `.claude/agents/` - Copied from halloween repo (4 agent files)
+### Phase 0.2: blink_led (C++ + Arduino)
+**Status:** ✅ Complete
 
-## What Next Session Should Do
+**Implementation:**
+- Template-based dependency injection pattern
+- Header-only BlinkController<OutputPin>
+- GoogleTest tests: 11 tests, all passing
+- Coverage: 100% (22/22 lines, 7/7 functions, 6/6 branches)
+- Arduino .ino wrapper: 56 lines (15 LOC)
 
-### User Action Required FIRST
-**User must add SONAR_TOKEN to GitHub repository secrets before any CI/CD will work.**
+**Files:**
+- `projects/examples/blink_led/lib/include/blink_controller.h` - Template controller
+- `projects/examples/blink_led/arduino/blink_led.ino` - Minimal hardware wrapper
+- `projects/examples/blink_led/test/test_blink_controller.cpp` - 11 tests
+- `projects/examples/blink_led/test/mock_hardware.h` - MockPin + MockTimer
+- `projects/examples/blink_led/README.md` - Complete pattern documentation
 
-Instructions provided to user in previous message.
+**Key Achievements:**
+- Dependency injection pattern proven for embedded systems
+- Zero-overhead static polymorphism (templates)
+- ALL logic testable (timing + output)
+- .ino file is pure hardware adapter (<60 lines)
+- Time wraparound handling validated
+- Mock hardware pattern established
+- Pattern scales to complex animatronics
 
-### Agent Task (After User Adds Token)
+### Development Tooling
+**Status:** ✅ Complete
 
-**Primary goal:** Determine if SonarCloud C++ coverage issue is monorepo-related or fundamental
+**Tools Created:**
+- `tools/sonarcloud_check.py` - SonarCloud status verification
+- `tools/ci_check.py` - GitHub Actions workflow monitoring
+- `tools/status.py` - Combined status check (CI + SonarCloud)
+- `tools/README.md` - Comprehensive tool documentation
 
-**Steps:**
-1. Confirm user has added SONAR_TOKEN secret
-2. Trigger CI/CD: `git commit --allow-empty -m "Test" && git push`
-3. Monitor GitHub Actions (wait 5-8 minutes for completion)
-4. Verify with tool:
-   ```bash
-   python /home/griswald/personal/halloween/tools/sonarcloud_verify.py \
-       --project griswaldbrooks_sonarcloud-cpp-minimal
-   ```
-5. Analyze results using framework in PROJECT_SUMMARY.md
-6. Document findings in RESULTS.md
+**Integration:**
+- Pixi tasks configured: `pixi run status-check`
+- API-based verification (no UI guessing)
+- Fast feedback for development workflow
 
-**Decision tree:**
-- **If coverage shows >0%:** Issue is monorepo-related, compare configs with halloween/cmake_prototype
-- **If coverage shows 0%:** Fundamental issue, prepare SonarCloud support ticket
+### Documentation
+**Status:** ✅ Complete
+
+**Created:**
+- `CLAUDE.md` - Project standards and conventions
+- `README.md` - Project overview and quick start
+- `docs/PHASE_0_EXAMPLES.md` - Detailed Phase 0 guide
+- `lib/examples/trivial_math/README.md` - Phase 0.1 pattern doc
+- `projects/examples/blink_led/README.md` - Phase 0.2 pattern doc
+- `tools/README.md` - Development tools guide
+- `tools/MCP_INVESTIGATION.md` - MCP investigation findings
+- `HANDOFF.md` - This file (updated for Phase 0.1-0.2)
+
+## What's Next: Phase 0.3
+
+### Phase 0.3: web_trigger (JavaScript + C++ + Arduino)
+**Status:** Not started
+**Priority:** High (final Phase 0 example)
+
+**Goal:** Validate multi-language integration pattern (JS + C++ + Arduino)
+
+**Implementation Tasks:**
+1. **Server Component (Node.js):**
+   - Express server with static file serving
+   - Socket.IO for WebSocket communication
+   - Serial port communication (mockable)
+   - Jest tests achieving 80%+ coverage
+   - c8 coverage reporting
+
+2. **Arduino Component (C++):**
+   - TriggerController class (state machine)
+   - Platform-agnostic logic library
+   - GoogleTest tests achieving 80%+ coverage
+   - gcov/gcovr coverage reporting
+   - Minimal .ino wrapper (<50 lines)
+
+3. **Integration:**
+   - WebSocket → Serial protocol definition
+   - Command message format (JSON)
+   - Dual-language coverage to SonarCloud
+   - Combined CI/CD workflow
+
+4. **Documentation:**
+   - Pattern guide (multi-language integration)
+   - Build instructions (both languages)
+   - Test strategy (mocking communication)
+   - Scaling guidance (multiple triggers, etc.)
+
+**Expected Structure:**
+```
+projects/examples/web_trigger/
+├── server/
+│   ├── src/
+│   │   └── server.js              # Express + Socket.IO
+│   ├── public/
+│   │   └── index.html             # Web UI
+│   ├── test/
+│   │   └── server.test.js         # Jest tests
+│   └── package.json
+├── arduino/
+│   ├── lib/
+│   │   └── trigger_logic/
+│   │       ├── include/trigger_logic.h
+│   │       ├── src/trigger_logic.cpp
+│   │       └── test/test_trigger_logic.cpp
+│   └── web_trigger.ino            # Arduino wrapper
+├── CMakeLists.txt                 # C++ desktop build
+├── platformio.ini                 # Arduino build
+└── README.md                      # Pattern documentation
+```
+
+**Success Criteria:**
+- JavaScript tests: 80%+ coverage, all passing
+- C++ tests: 80%+ coverage, all passing
+- Both coverages report to SonarCloud correctly
+- CI/CD builds and tests both components
+- Serial communication protocol documented
+- Web UI triggers Arduino component
+- Pattern documented for future multi-language projects
+
+**Estimated Timeline:** 1-2 weeks
 
 ## Where to Find Resources
 
 ### In This Repository
-- `NEXT_AGENT_QUICKSTART.md` - Start here! Quick start guide
-- `PROJECT_SUMMARY.md` - Analysis framework and decision tree
-- `SETUP.md` - Step-by-step setup instructions (for reference)
-- `CLAUDE.md` - Full project context and conventions
-- `.claude/agents/` - Agent configurations (project-manager, coder, etc.)
 
-### In Halloween Repository
+**Getting Started:**
+- `README.md` - Project overview, quick start, current status
+- `CLAUDE.md` - Project standards, conventions, development workflow
+- `HANDOFF.md` - This file (session handoff and next steps)
+
+**Phase 0 Documentation:**
+- `docs/PHASE_0_EXAMPLES.md` - Comprehensive Phase 0 guide
+- `lib/examples/trivial_math/README.md` - Phase 0.1 pattern (Pure C++)
+- `projects/examples/blink_led/README.md` - Phase 0.2 pattern (C++ + Arduino)
+
+**Development Tools:**
+- `tools/README.md` - Tool documentation and usage guide
+- `tools/sonarcloud_check.py` - SonarCloud status verification
+- `tools/ci_check.py` - GitHub Actions monitoring
+- `tools/status.py` - Combined status check
+
+**Build and Test:**
+- `CMakeLists.txt` - Root build configuration
+- `pixi.toml` - Environment and task definitions
+- `sonar-project.properties` - SonarCloud configuration
+
+**Source Code:**
+- `lib/examples/trivial_math/` - Phase 0.1 implementation
+- `projects/examples/blink_led/` - Phase 0.2 implementation
+- All code fully documented with inline comments
+
+### In Halloween Repository (Reference)
 Located at: `/home/griswald/personal/halloween`
 
 **Tools:**
-- `tools/sonarcloud_verify.py` - API verification tool (CRITICAL for ground truth)
+- `tools/sonarcloud_verify.py` - Comprehensive diagnostic tool
 - `tools/README.md` - Tool documentation
-- `tools/SONARCLOUD_API.md` - API details
 
-**Context:**
-- `CLAUDE.md` - Full halloween project conventions
-- `cmake_prototype/` - Original prototype with coverage issue
-- `SESSION_2025-11-12_CMAKE_PROTOTYPE.md` - Complete investigation history
+**Lessons Learned:**
+- `CLAUDE.md` - Project conventions and standards
+- `spider_crawl_projection/` - 24% → 94% coverage case study
+- `hatching_egg/` - 85.9% C++ coverage with hardware abstraction
+- Various SESSION_*.md files - Investigation histories
 
-## Expected Outcomes
+## Key Patterns Established
 
-### Success Case 1: Coverage Works
-- Tool shows >0% coverage for math_utils.cpp
-- Conclusion: Monorepo structure is the issue
-- Action: Compare this config with halloween/cmake_prototype
-- Deliverable: Document the specific config difference
+### Pattern 1: Pure C++ Library (Phase 0.1)
+**Use Case:** Platform-agnostic business logic
 
-### Success Case 2: Coverage Fails
-- Tool shows 0% coverage despite successful CI/CD
-- Conclusion: Fundamental issue with gcovr + SonarCloud C++
-- Action: Prepare minimal reproduction for SonarCloud support
-- Deliverable: Support ticket with evidence
+**Architecture:**
+- Header-only constexpr functions (compile-time when possible)
+- Runtime versions for coverage testing
+- Zero hardware dependencies
+- 100% testable on desktop
 
-### Either Outcome is Valuable
-Both answers are useful:
-- **Works:** We know how to fix halloween repo
-- **Fails:** We know to escalate to SonarCloud support
+**Benefits:**
+- Fast iteration (instant tests)
+- High coverage achievable
+- Portable across platforms
+- Modern C++ features demonstrated
 
-## Key Technical Details
+**When to Use:**
+- Kinematics calculations
+- State machine logic
+- Math utilities
+- Algorithm implementations
 
-### SonarCloud Configuration
-- **Project:** griswaldbrooks_sonarcloud-cpp-minimal
-- **Organization:** griswaldbrooks
-- **Dashboard:** https://sonarcloud.io/dashboard?id=griswaldbrooks_sonarcloud-cpp-minimal
+### Pattern 2: C++ + Arduino with Dependency Injection (Phase 0.2)
+**Use Case:** Hardware control with testable logic
 
-### Coverage Setup
-- **Format:** gcovr SonarQube XML (coverage.xml)
-- **Property:** sonar.coverageReportPaths=coverage.xml
-- **Generation:** CI/CD step after tests pass
-- **Local verification:** build/ directory has HTML report
+**Architecture:**
+- Template-based controller (header-only)
+- OutputPin interface via dependency injection
+- Mock hardware for testing
+- Minimal .ino wrapper (hardware adapter)
 
-### CI/CD Workflow
-- **Trigger:** Push to any branch
-- **Steps:** checkout → install deps → build → test → coverage → sonarcloud
-- **Runtime:** ~5-8 minutes total
-- **Secrets needed:** SONAR_TOKEN (user must add)
+**Benefits:**
+- ALL logic testable (timing + output)
+- Zero runtime overhead (static polymorphism)
+- .ino file <60 lines (no business logic)
+- Scales to complex animatronics
 
-## Critical Lessons from Halloween Investigation
+**When to Use:**
+- Servo control
+- LED patterns
+- Sensor reading with logic
+- Multi-output coordination
 
-1. **Tool verification is essential** - Don't trust UI alone
-2. **Path resolution is fragile** - Small mismatches cause silent failures
-3. **compile_commands.json required** - CFamily sensor won't work without it
-4. **gcovr XML is correct format** - Not .gcov or LCOV
-5. **Monorepo complexity matters** - Subdirectories may cause path issues
+### Pattern 3: Multi-Language (Phase 0.3 - Pending)
+**Use Case:** Web interface + Arduino control
 
-## Communication Guidelines for Next Agent
+**Architecture:**
+- Node.js server (Express + Socket.IO)
+- C++ Arduino component
+- Defined communication protocol
+- Independent test suites
 
-**When reporting results:**
-- ✅ Show actual tool output (copy/paste)
-- ✅ Verify with API tool before claiming success/failure
-- ✅ Be specific about what was tested and how
-- ✅ State confidence level in conclusions
-- ❌ Don't rely on dashboard UI screenshots alone
-- ❌ Don't guess about SonarCloud internal state
-- ❌ Don't claim coverage works without tool verification
+**Benefits:**
+- Each language uses best tools
+- Separate coverage tracking
+- Mock communication for testing
+- Web UI for control
 
-## If Things Go Wrong
+**When to Use:**
+- Remote triggering
+- Web dashboards
+- Multi-device coordination
+- Complex UI requirements
 
-### CI Fails to Run
-- Check if user added SONAR_TOKEN secret
-- Verify GitHub Actions is enabled for repo
-- Check for syntax errors in workflow YAML
+## Quick Reference
 
-### Tool Can't Find Project
-- Verify project key spelling: `griswaldbrooks_sonarcloud-cpp-minimal`
-- Check if SonarCloud analysis completed (may take 2-3 min after CI)
-- Try again after a few minutes
+### Build and Test Commands
 
-### Results Are Ambiguous
-- Re-run tool multiple times to confirm
-- Check SonarCloud dashboard as secondary verification
-- Review CI logs for warnings or errors
-- Compare side-by-side with halloween/cmake_prototype setup
-
-## Timeline Expectations
-
-- **User adds token:** 2 minutes
-- **Trigger CI/CD:** 30 seconds
-- **CI/CD runs:** 5-8 minutes
-- **SonarCloud analysis:** 2-3 minutes
-- **Tool verification:** 30 seconds
-- **Analysis & documentation:** 10-15 minutes
-- **Total:** ~20-25 minutes to definitive answer
-
-## Success Criteria for Next Session
-
-Session is complete when you can answer:
-1. Does coverage display in SonarCloud? (Yes/No, tool-verified)
-2. What's the actual coverage percentage? (From tool output)
-3. Is this monorepo-related or fundamental? (Clear conclusion)
-4. What's the recommended next action? (Specific and actionable)
-
-## Files Ready for Next Agent
-
-```
-sonarcloud-cpp-minimal/
-├── .claude/
-│   └── agents/                    # 4 agent configurations
-├── .github/workflows/
-│   └── ci.yml                     # CI/CD with coverage
-├── src/                           # Source files (2 files)
-├── test/                          # Test files (1 file)
-├── CLAUDE.md                      # Project conventions ✅
-├── NEXT_AGENT_QUICKSTART.md       # Quick start guide ✅
-├── HANDOFF.md                     # This file ✅
-├── PROJECT_SUMMARY.md             # Analysis framework
-├── SETUP.md                       # Setup instructions
-├── README.md                      # Project description
-├── CMakeLists.txt                 # Build configuration
-└── sonar-project.properties       # SonarCloud config
+**Test all examples:**
+```bash
+pixi run test-all         # Run all tests
+pixi run coverage-all     # Generate coverage for all
+pixi run view-coverage-all # View HTML report
 ```
 
-## Repository State
+**Test individual examples:**
+```bash
+pixi run test-trivial     # Phase 0.1 only
+pixi run test-blink       # Phase 0.2 only
+```
 
-**Branch:** main
-**Last commit:** "Add agent configurations and documentation for next session"
-**Status:** Clean working directory
-**Remote:** https://github.com/griswaldbrooks/sonarcloud-cpp-minimal
+**Status checks:**
+```bash
+pixi run status-check      # Combined CI + SonarCloud status
+pixi run check-ci          # Just GitHub Actions
+pixi run check-sonarcloud  # Just SonarCloud
+```
 
-## Final Notes
+### Project Configuration
 
-This is a **focused investigation** to answer ONE question: Is the coverage issue monorepo-related or fundamental?
+**SonarCloud:**
+- Project: `griswaldbrooks_sonarcloud-cpp-minimal`
+- Organization: `griswaldbrooks`
+- Dashboard: https://sonarcloud.io/dashboard?id=griswaldbrooks_sonarcloud-cpp-minimal
 
-The answer is ~20 minutes away once the user adds the SONAR_TOKEN secret.
+**Coverage:**
+- C++ Format: gcovr SonarQube XML → `coverage.xml`
+- JavaScript Format: c8 LCOV (for Phase 0.3)
+- Target: 80%+ (aiming for 100% in Phase 0)
 
-**For next agent:**
-1. Read NEXT_AGENT_QUICKSTART.md first
-2. Wait for user to confirm token added
-3. Follow the steps precisely
-4. Use the tool to verify (don't guess)
-5. Document findings clearly
-6. Recommend specific next action
+**CI/CD:**
+- Platform: GitHub Actions
+- Workflow: `.github/workflows/coverage.yml`
+- Triggers: Push to any branch
+- Runtime: ~5-8 minutes
 
-**Good luck!**
+## Development Standards Applied
+
+### Hardware Abstraction
+- **Principle:** Business logic never calls hardware directly
+- **Implementation:** Interface classes (IServoController, ISensor, OutputPin)
+- **Testing:** Mock implementations for desktop tests
+- **Result:** 100% logic coverage without hardware
+
+### Documentation Hygiene
+- **Principle:** Minimal, focused, current documentation
+- **Implementation:** Each doc serves clear purpose, no duplication
+- **Current:** <15 markdown files (well under target)
+- **Maintenance:** Update docs as part of implementation
+
+### Tool-Based Verification
+- **Principle:** API-based verification, not UI assumptions
+- **Tools:** sonarcloud_check.py, ci_check.py, status.py
+- **Workflow:** Build → Test → Push → Verify → Fix
+- **Benefit:** Know ground truth, fast feedback
+
+### Test Coverage Standards
+- **Core logic:** 80%+ minimum, 100% for Phase 0
+- **Hardware wrappers:** Integration tests with mocks
+- **Coverage tools:** gcov/gcovr (C++), c8 (JavaScript)
+- **Reporting:** SonarQube XML format to SonarCloud
+
+## Ready for Next Agent
+
+### Phase 0 Status
+- ✅ Phase 0.1 (trivial_math): Complete, 100% coverage
+- ✅ Phase 0.2 (blink_led): Complete, 100% coverage
+- ⏳ Phase 0.3 (web_trigger): Not started (next task)
+
+### All Tests Passing
+```bash
+$ pixi run test-all
+[==========] Running 23 tests from 3 test suites.
+[==========] 23 tests from 3 test suites ran. (0 ms total)
+[  PASSED  ] 23 tests.
+```
+
+### Documentation Current
+- All code fully documented
+- All patterns described
+- All examples have READMEs
+- HANDOFF.md updated (this file)
+
+### Next Steps Clear
+1. Implement Phase 0.3 (web_trigger)
+2. Validate multi-language pattern
+3. Push to GitHub and verify SonarCloud
+4. Complete Phase 0, move to Phase 1
 
 ---
 
-**Handoff completed:** 2025-11-12
-**Next session goal:** Determine root cause of SonarCloud C++ coverage issue
-**Estimated time:** 20-25 minutes to answer
+**Handoff completed:** 2025-11-14
+**Phase 0 Progress:** 2 of 3 examples complete
+**Next milestone:** Complete Phase 0.3 (web_trigger)
+**Estimated time to Phase 1:** 1-2 weeks
