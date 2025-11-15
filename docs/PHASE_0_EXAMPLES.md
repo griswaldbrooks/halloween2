@@ -277,6 +277,7 @@ pixi run upload-blink-leonardo
 - [ ] CMake builds C++ library for desktop
 - [ ] GoogleTest tests pass
 - [ ] Coverage 80%+ for blink_logic
+- [ ] **Simulator implemented and demonstrates behavior**
 - [ ] PlatformIO compiles .ino for Arduino
 - [ ] PlatformIO can upload to hardware
 - [ ] LED blinks on actual hardware
@@ -364,10 +365,31 @@ TEST(Blink, TurnsOn) {
 - No virtual dispatch, no heap allocation
 - Pattern proven for embedded systems
 
+**Simulator (ConsoleLEDPin):**
+The blink_led example includes a text-based simulator for visual verification:
+```cpp
+struct ConsoleLEDPin {
+    void set(bool state) {
+        const char* color = state ? "\033[32m" : "\033[31m";  // GREEN : RED
+        const char* symbol = state ? "███ ON ███" : "▓▓▓ OFF ▓▓▓";
+        std::cout << color << symbol << "\033[0m\n";
+    }
+};
+```
+
+Run with: `pixi run demo-blink`
+
+**Purpose of Simulator:**
+- Observe actual timing behavior before uploading to hardware
+- Debug state transitions and edge cases
+- Demonstrate functionality to stakeholders
+- Complement unit tests with visual verification
+
 **Files:**
 - See `/home/griswald/personal/sonarcloud-cpp-minimal/projects/examples/blink_led/`
 - `lib/include/blink_controller.h` - Header-only template (100% coverage)
 - `test/mock_hardware.h` - MockPin and MockTimer
+- `src/main.cpp` - ConsoleLEDPin simulator demo
 - `arduino/blink_led.ino` - Minimal wrapper with LEDPin adapter
 
 ---
@@ -501,10 +523,18 @@ pixi run upload-web-trigger-leonardo
 - [ ] Jest tests pass (80%+ coverage)
 - [ ] C++ library builds for desktop
 - [ ] GoogleTest tests pass (80%+ coverage)
+- [ ] **Simulator demonstrates trigger → LED behavior**
 - [ ] Arduino compiles and uploads
 - [ ] Web button triggers Arduino LED
 - [ ] Both coverages report to SonarCloud
 - [ ] CI/CD builds all components
+
+### Simulator Suggestion
+
+For web_trigger, the simulator should demonstrate the full communication flow:
+- **Text-based option**: Console output showing "Web trigger received → Serial sent → LED activated"
+- **Web-based option**: Browser page with visual LED indicator that responds to button clicks
+- **Pattern**: Use dependency injection to swap real SerialPort with MockSerial that outputs to console
 
 ### Status
 

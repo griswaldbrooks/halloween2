@@ -6,8 +6,9 @@ This example demonstrates the production embedded systems pattern used throughou
 - Platform-agnostic C++ logic library
 - Minimal Arduino .ino wrapper (<50 lines)
 - Desktop testing with GoogleTest
+- **Hardware simulator for visual verification**
 - 80%+ test coverage
-- Hardware abstraction via interfaces
+- Hardware abstraction via dependency injection
 
 ## Pattern Overview (v2: Dependency Injection)
 
@@ -28,13 +29,13 @@ This example demonstrates the production embedded systems pattern used throughou
 │   └──────────────────────────────────┘          │
 └───────────────────┬─────────────────────────────┘
                     │
-        ┌───────────┴──────────────┐
-        │                          │
-┌───────▼──────────┐    ┌──────────▼─────────┐
-│     LEDPin       │    │     MockPin        │
-│ (Arduino .ino)   │    │   (Testing)        │
-│ digitalWrite()   │    │ state tracking     │
-└──────────────────┘    └────────────────────┘
+        ┌───────────┴──────────────┬─────────────────┐
+        │                          │                  │
+┌───────▼──────────┐    ┌──────────▼─────────┐  ┌───▼──────────┐
+│     LEDPin       │    │     MockPin        │  │ ConsoleLEDPin │
+│ (Arduino .ino)   │    │   (Testing)        │  │  (Demo)       │
+│ digitalWrite()   │    │ state tracking     │  │ colored text  │
+└──────────────────┘    └────────────────────┘  └───────────────┘
 ```
 
 **Key Insight:** By injecting the output pin, ALL logic (timing + output) stays in the controller. The .ino becomes pure hardware adapter code with no testable logic.
@@ -46,6 +47,8 @@ blink_led/
 ├── lib/                          # Platform-agnostic library
 │   └── include/
 │       └── blink_controller.h    # Header-only template (100% coverage)
+├── src/
+│   └── main.cpp                  # Demo executable with ConsoleLEDPin
 ├── arduino/
 │   └── blink_led.ino             # Arduino wrapper (55 lines with comments)
 ├── test/
@@ -66,14 +69,46 @@ The `BlinkController<OutputPin>` template:
 - Zero overhead: templates compile to direct calls (no virtual dispatch)
 - Pure C++ header-only library (no .cpp file needed)
 
-### 2. Minimal Arduino Wrapper
+### 2. Hardware Simulator (CRITICAL PATTERN)
+
+**Every hardware project must have a simulator.**
+
+This example includes `ConsoleLEDPin` - a text-based simulator:
+```cpp
+struct ConsoleLEDPin {
+    void set(bool state) {
+        const char* color = state ? "\033[32m" : "\033[31m";  // GREEN : RED
+        const char* symbol = state ? "███ ON ███" : "▓▓▓ OFF ▓▓▓";
+        std::cout << color << symbol << "\033[0m\n";
+    }
+};
+```
+
+**Why simulators are required:**
+- Verify timing and behavior BEFORE uploading to hardware
+- Debug complex state transitions interactively
+- Demonstrate functionality to stakeholders
+- Faster iteration cycle than hardware testing
+- Complement unit tests with observable demonstrations
+
+**Three implementations of the same interface:**
+1. **MockPin** (test/mock_hardware.h) - For unit tests with assertions
+2. **ConsoleLEDPin** (src/main.cpp) - For visual simulation and demos
+3. **LEDPin** (arduino/blink_led.ino) - For actual hardware
+
+**Simulator scales with complexity:**
+- Simple projects → Text-based (this example)
+- Servo projects → Web visualization showing positions
+- Multi-animatronic → Timeline showing coordinated sequences
+
+### 3. Minimal Arduino Wrapper
 The .ino file is 55 lines including comments:
 - Defines `LEDPin` struct (hardware adapter)
 - `setup()`: Initialize hardware
 - `loop()`: Just calls `controller.update(millis())`
 - Zero business logic - purely hardware glue code
 
-### 3. Comprehensive Testing
+### 4. Comprehensive Testing
 12 test cases covering:
 - Initial state verification
 - State transitions (off → on → off)
@@ -91,23 +126,57 @@ Target: 80%+ line coverage (aiming for 100%)
 
 ## Building and Testing
 
+### Interactive Demo (Recommended!)
+Run the visual demo to see BlinkController in action:
+```bash
+# Using pixi (easiest)
+pixi run demo-blink
+
+# Or manually
+cmake -B build/demo -DENABLE_COVERAGE=ON
+cmake --build build/demo
+./build/demo/projects/examples/blink_led/blink_demo
+```
+
+**Demo Output:**
+```
+=== BlinkController Demo ===
+Demonstrating dependency injection with ConsoleLEDPin
+
+Configuration:
+  ON duration:  1000ms
+  OFF duration: 500ms
+  Total cycle:  1500ms
+
+Running for 10 seconds...
+
+[0ms] LED: ▓▓▓ OFF ▓▓▓      (RED in terminal)
+[50ms] LED: ▓▓▓ OFF ▓▓▓
+[100ms] LED: ▓▓▓ OFF ▓▓▓
+...
+[501ms] LED: ███ ON ███     (GREEN in terminal)
+[551ms] LED: ███ ON ███
+...
+[1505ms] LED: ▓▓▓ OFF ▓▓▓
+```
+
+The demo showcases:
+- **ConsoleLEDPin**: Another implementation of the output pin interface
+- **Colored output**: RED when OFF, GREEN when ON (ANSI codes)
+- **Real-time simulation**: Runs for 10 seconds showing multiple blink cycles
+- **Dependency injection**: Same BlinkController works with different output types
+
 ### Desktop Tests
 ```bash
-# Configure
+# Using pixi (recommended)
+pixi run test-blink          # Run tests
+pixi run coverage-blink      # Generate coverage
+pixi run view-coverage-blink # View in browser
+
+# Or manually
 cmake -B build -DBUILD_TESTS=ON -DENABLE_COVERAGE=ON
-
-# Build
 cmake --build build
-
-# Run tests
 ./build/projects/examples/blink_led/test_blink_controller
-
-# Generate coverage
-cd build
-make coverage-blink
-
-# View coverage report
-xdg-open coverage-blink.html
 ```
 
 ### Arduino Build
@@ -236,9 +305,12 @@ class MockServoController : public IServoController {
 - ✅ 100% line coverage (19/19 lines in header)
 - ✅ Header-only template (zero .cpp file, zero overhead)
 - ✅ ALL logic testable (timing + output behavior)
+- ✅ **Hardware simulator implemented (ConsoleLEDPin with colored output)**
+- ✅ Three implementations: MockPin (tests), ConsoleLEDPin (demo), LEDPin (hardware)
 - ✅ MockPin pattern proven for hardware abstraction
 - ✅ Compiles for Arduino and desktop
 - ✅ Pattern scales to PWM, multiple outputs, complex sequences
+- ✅ Demo accessible via `pixi run demo-blink`
 
 ## Lessons Applied
 

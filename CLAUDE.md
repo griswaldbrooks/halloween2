@@ -125,6 +125,43 @@ halloween2/
 - Mock implementations for testing
 - .ino files are thin wrappers only (<50 lines)
 
+### Hardware Simulator Requirement
+**Every hardware project must have an accompanying simulator**
+
+All projects that run on physical hardware must provide a way to verify functionality before uploading to hardware:
+
+1. **Purpose**: Observe actual code behavior without hardware
+   - Check timing and state transitions
+   - Verify user experience (animations, sequences)
+   - Debug complex behaviors interactively
+   - Complement unit tests with observable demonstrations
+
+2. **Simulator Types** (scaled to project complexity):
+   - **Text-based**: Simple timing/state changes (e.g., blink_led ConsoleLEDPin)
+   - **Web-based**: Complex visualizations (servo positions, multi-animatronic coordination)
+   - **Physics simulation**: Extreme cases only (not currently needed)
+
+3. **Implementation Pattern**: Use dependency injection
+   - Same pattern as testing (inject different implementations)
+   - MockPin for unit tests (assertions)
+   - ConsoleLEDPin/WebVisualizer for simulation (observation)
+   - HardwarePin for actual hardware (real output)
+
+4. **Requirements**:
+   - Must run actual code (not mock behavior)
+   - Runnable on laptop without hardware
+   - Provides visual or observable feedback
+   - Should be accessible via `pixi run demo-<project>`
+
+5. **Examples**:
+   - **blink_led**: ConsoleLEDPin with colored terminal output (RED/GREEN)
+   - **Future servo projects**: Web page showing servo positions in real-time
+   - **Future multi-animatronic**: Web timeline showing coordinated animations
+
+**Relationship to Testing**: Simulators complement, not replace, unit tests
+- Unit tests verify logic correctness (assertions)
+- Simulators verify realistic behavior and user experience (observation)
+
 ### Code Quality
 - No SonarCloud bugs or vulnerabilities
 - Fix code smells when reasonable

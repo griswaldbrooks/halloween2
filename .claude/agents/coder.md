@@ -468,11 +468,58 @@ void loop() {
 - Common APIs across platforms
 - Document platform requirements
 
+### Hardware Simulator Requirement
+
+**CRITICAL: Every hardware project must have a simulator**
+
+When implementing any project that runs on physical hardware:
+
+1. **Always create a simulator** alongside tests
+   - Use dependency injection pattern (same as testing)
+   - Inject different implementations: MockPin (tests), SimulatorPin (demo), HardwarPin (real)
+
+2. **Simulator complexity should match project**:
+   - **Simple timing/state** → Text-based (ConsoleLEDPin pattern from blink_led)
+   - **Servo positions** → Web-based visualization showing angles/positions
+   - **Multi-animatronic** → Web timeline showing coordinated sequences
+
+3. **Example patterns**:
+   ```cpp
+   // Text-based simulator for blink_led
+   struct ConsoleLEDPin {
+       void set(bool state) {
+           const char* color = state ? "\033[32m" : "\033[31m";
+           const char* symbol = state ? "███ ON ███" : "▓▓▓ OFF ▓▓▓";
+           std::cout << color << symbol << "\033[0m\n";
+       }
+   };
+
+   // Usage in main.cpp
+   ConsoleLEDPin console_pin;
+   BlinkController<ConsoleLEDPin> controller(console_pin, 1000, 500);
+   ```
+
+4. **Simulator requirements**:
+   - Must run actual code (not mock behavior)
+   - Runnable on laptop without hardware
+   - Provides visual/observable feedback
+   - Accessible via `pixi run demo-<project>`
+   - Documented in project README.md
+
+5. **Purpose**: Simulators complement tests
+   - Unit tests verify correctness (assertions)
+   - Simulators verify experience (observation)
+   - Faster iteration than hardware upload
+   - Debug complex behaviors interactively
+
+**Never implement hardware project without simulator.**
+
 ### Before Claiming Done
 
 1. ✅ Run tests locally: `pixi run test`
 2. ✅ Check coverage: `pixi run coverage` (meets 80% target?)
 3. ✅ Verify hardware abstraction used (no direct hardware calls in logic)
-4. ✅ Run verification tool: `python tools/sonarcloud_verify.py --component <name>`
-5. ✅ Show actual output to user
-6. ❌ Don't claim SonarCloud working without tool verification
+4. ✅ **Implement and test simulator** (`pixi run demo-<project>` works)
+5. ✅ Run verification tool: `python tools/sonarcloud_verify.py --component <name>`
+6. ✅ Show actual output to user
+7. ❌ Don't claim SonarCloud working without tool verification

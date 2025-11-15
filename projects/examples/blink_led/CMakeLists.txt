@@ -19,7 +19,23 @@ target_include_directories(blink_controller INTERFACE
 )
 
 # Note: INTERFACE libraries don't support compile options or coverage flags
-# Coverage is applied at the test executable level below
+# Coverage is applied at the test and demo executable levels below
+
+# Demo executable (desktop only)
+# Demonstrates BlinkController with ConsoleLEDPin for visual feedback
+add_executable(blink_demo
+    src/main.cpp
+)
+
+target_link_libraries(blink_demo
+    blink_controller
+)
+
+# Coverage flags for demo executable
+if(ENABLE_COVERAGE)
+    target_compile_options(blink_demo PRIVATE --coverage)
+    target_link_options(blink_demo PRIVATE --coverage)
+endif()
 
 # Tests (desktop only)
 if(BUILD_TESTS)
