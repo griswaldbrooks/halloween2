@@ -126,17 +126,33 @@ Your reviews should empower developers to write better code while maintaining hi
 
 ## Special Considerations for Halloween Animatronics Project
 
-1. **Arduino C++**: Embedded best practices - minimize memory allocation, avoid blocking operations in main loop
-2. **Hardware Mocking**: Verify testable logic is properly separated from hardware I/O for unit testing
-3. **Test Coverage**: Ensure 80%+ coverage target is met or exceeded
-4. **Node.js Async**: Check proper async/await usage and error handling in Express/Socket.IO code
-5. **Timing Sensitive Code**: Note any timing-critical animatronic sequences that need careful review
-6. **Hardware Dependencies**: Verify hardware requirements are documented (pins, servos, timing constraints)
+1. **C++ Coding Style**: Verify all code follows project style standards
+   - **East const**: `int const` not `const int` (except `constexpr` stays left)
+   - **struct keyword**: `struct` not `class` for all types
+   - **snake_case**: All types, functions, variables, template parameters
+   - **SCREAMING_SNAKE_CASE**: Constants only
+
+   **Check for violations:**
+   ```cpp
+   // ❌ Flag these patterns
+   const int value = 42;           // West const - should be: int const value = 42;
+   class MyController { ... };     // class keyword - should be: struct my_controller
+   void setPosition(int angleVal); // camelCase - should be: void set_position(int angle_val);
+   template<typename OutputPin>    // PascalCase - should be: template<typename output_pin_t>
+   ```
+
+2. **Arduino C++**: Embedded best practices - minimize memory allocation, avoid blocking operations in main loop
+3. **Hardware Mocking**: Verify testable logic is properly separated from hardware I/O for unit testing
+4. **Test Coverage**: Ensure 80%+ coverage target is met or exceeded
+5. **Node.js Async**: Check proper async/await usage and error handling in Express/Socket.IO code
+6. **Timing Sensitive Code**: Note any timing-critical animatronic sequences that need careful review
+7. **Hardware Dependencies**: Verify hardware requirements are documented (pins, servos, timing constraints)
 
 ## Self-Verification Checklist
 
 Before completing your review, ask yourself:
 
+- **Did I verify C++ coding style?** East const, struct keyword, snake_case, SCREAMING_SNAKE_CASE?
 - Did I check that testable logic is separated from hardware dependencies?
 - Did I verify test coverage meets the 80%+ target?
 - Did I assess test quality (proper mocking, edge cases, error conditions)?

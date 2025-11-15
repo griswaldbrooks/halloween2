@@ -1,0 +1,76 @@
+---
+# Halloween 2.0 C++ Code Style
+# Based on Google style with custom modifications for project preferences
+
+BasedOnStyle: Google
+
+# Language and standard
+Language: Cpp
+Standard: c++17
+
+# East const preference (const on the right)
+# Note: clang-format cannot automatically enforce east const,
+# but we configure related settings to be compatible
+QualifierAlignment: Custom
+QualifierOrder: ['inline', 'static', 'constexpr', 'type', 'const', 'volatile']
+
+# Indentation and spacing
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ColumnLimit: 100
+
+# Naming conventions (clang-format doesn't enforce these, but we document them)
+# - Types: snake_case (struct blink_controller)
+# - Functions: snake_case (void update_state())
+# - Variables: snake_case (int current_time_ms)
+# - Constants: SCREAMING_SNAKE_CASE (constexpr int MAX_SERVOS = 16)
+# - Template parameters: snake_case with _t suffix (typename output_pin_t)
+
+# Bracing and formatting
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterClass: false
+  AfterControlStatement: Never
+  AfterEnum: false
+  AfterFunction: false
+  AfterNamespace: false
+  AfterStruct: false
+  AfterUnion: false
+  BeforeCatch: false
+  BeforeElse: false
+
+# Pointer and reference alignment
+PointerAlignment: Left
+ReferenceAlignment: Left
+
+# Function declarations
+AllowShortFunctionsOnASingleLine: Inline
+AlwaysBreakAfterReturnType: None
+
+# Include ordering
+SortIncludes: CaseSensitive
+IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex: '^<.*\.h>'
+    Priority: 1
+  - Regex: '^<.*>'
+    Priority: 2
+  - Regex: '.*'
+    Priority: 3
+
+# Template formatting
+AlwaysBreakTemplateDeclarations: Yes
+SpaceAfterTemplateKeyword: false
+
+# Comments
+ReflowComments: true
+SpacesBeforeTrailingComments: 2
+
+# Other formatting
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+AllowShortBlocksOnASingleLine: Never
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false

@@ -162,11 +162,105 @@ All projects that run on physical hardware must provide a way to verify function
 - Unit tests verify logic correctness (assertions)
 - Simulators verify realistic behavior and user experience (observation)
 
+### C++ Coding Style
+
+**Required style preferences for all C++ code:**
+
+1. **East const** - Place `const` on the right (reads left-to-right)
+   ```cpp
+   // ✅ CORRECT - East const
+   int const value = 42;
+   char const* const ptr = "hello";
+   std::string const& get_name() const;
+
+   // ❌ WRONG - West const
+   const int value = 42;
+   const char* const ptr = "hello";
+   const std::string& getName() const;
+   ```
+
+   **Rationale:** East const reads naturally left-to-right: "value is an int that is const" vs "const int value". Consistent placement eliminates confusion with pointer types.
+
+   **Exception:** `constexpr` remains on the left (not movable):
+   ```cpp
+   constexpr int max_servos = 16;  // ✅ CORRECT
+   ```
+
+2. **Structs instead of classes** - Use `struct` keyword for all types
+   ```cpp
+   // ✅ CORRECT - struct keyword
+   struct blink_controller {
+       void update(uint32_t current_time_ms);
+   private:
+       uint32_t last_toggle_time_ms_;
+   };
+
+   template<typename output_pin_t>
+   struct blink_controller_template {
+       // ...
+   };
+
+   // ❌ WRONG - class keyword
+   class BlinkController {
+       // ...
+   };
+   ```
+
+   **Rationale:** In C++, `struct` and `class` are functionally identical except default access (public vs private). Using `struct` consistently simplifies the codebase and aligns with modern C++ style (std::variant, std::optional use struct). No functional difference in behavior.
+
+3. **Snake case for everything** - Functions, types, variables, templates
+   ```cpp
+   // ✅ CORRECT - snake_case
+   struct servo_controller {
+       void set_position(int servo_id, int angle_degrees);
+       int get_position(int servo_id) const;
+   private:
+       int current_position_;
+   };
+
+   template<typename output_pin_t>
+   struct blink_controller {
+       void update_state(uint32_t current_time_ms);
+   };
+
+   namespace animatronics {
+       int calculate_servo_angle(int target);
+   }
+
+   // ❌ WRONG - camelCase or PascalCase
+   struct ServoController {
+       void setPosition(int servoId, int angleDegrees);
+       int getPosition(int servoId) const;
+   private:
+       int currentPosition_;
+   };
+
+   template<typename OutputPin>
+   class BlinkController {
+       void updateState(uint32_t currentTimeMs);
+   };
+   ```
+
+   **Rationale:** Consistency aids readability. Snake_case is widely used in modern C++ (STL, Boost, Abseil) and Python. Single naming convention eliminates mental context switching in multi-language project.
+
+4. **Constants** - Use SCREAMING_SNAKE_CASE for compile-time constants
+   ```cpp
+   // ✅ CORRECT
+   constexpr int MAX_SERVOS = 16;
+   constexpr uint32_t DEFAULT_BLINK_DURATION_MS = 1000;
+   int const LED_PIN = 13;  // Runtime constant
+
+   // ❌ WRONG
+   constexpr int maxServos = 16;
+   constexpr int kMaxServos = 16;
+   ```
+
 ### Code Quality
 - No SonarCloud bugs or vulnerabilities
 - Fix code smells when reasonable
-- Use clang-format for C++ (Google style)
+- Use clang-format for C++ (enforce east const, formatting)
 - Follow modern C++ patterns (RAII, smart pointers, constexpr)
+- **Apply coding style consistently** (east const, struct, snake_case)
 
 ### Documentation Hygiene
 - Keep minimal and focused (<10 markdown files ideal)

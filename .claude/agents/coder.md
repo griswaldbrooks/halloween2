@@ -23,12 +23,44 @@ You will:
 ### Arduino C++
 When working with Arduino C++:
 - Follow embedded best practices (minimize dynamic memory allocation)
-- Use `const` correctness for configuration values
+- **Use east const** - `int const` not `const int` (constexpr stays left)
+- **Use struct keyword** - `struct` not `class` (functionally identical)
+- **Use snake_case** - types, functions, variables, template parameters
+- **Constants use SCREAMING_SNAKE_CASE** - `MAX_SERVOS` not `maxServos`
 - Keep timing-sensitive code in main loop, not interrupts
 - Document hardware dependencies and pin assignments
 - Extract testable logic into separate header files for unit testing
 - Use proper serial communication patterns
 - Be mindful of flash and RAM constraints
+
+**Style Examples:**
+```cpp
+// ✅ CORRECT - East const, struct, snake_case
+struct servo_controller {
+    void set_position(int servo_id, int angle_degrees);
+    int get_position(int servo_id) const;
+private:
+    int current_position_;
+};
+
+template<typename output_pin_t>
+struct blink_controller {
+    void update(uint32_t current_time_ms);
+private:
+    output_pin_t& output_;
+    uint32_t const on_duration_ms_;  // East const
+    bool led_on_;
+};
+
+constexpr int MAX_SERVOS = 16;  // constexpr stays left
+int const LED_PIN = 13;  // East const for runtime constants
+
+// ❌ WRONG - West const, class, camelCase
+class ServoController {
+    void setPosition(int servoId, int angleDegrees);
+    const int currentPosition_;  // West const
+};
+```
 
 ### JavaScript/Node.js
 When working with JavaScript:
@@ -369,6 +401,7 @@ pixi run serve && pixi run open
 
 Before considering code complete:
 - ✅ Code follows language best practices and project standards
+- ✅ **C++ style applied**: East const, struct keyword, snake_case, SCREAMING_SNAKE_CASE constants
 - ✅ All functions have appropriate error handling
 - ✅ Code is structured for easy testing (hardware mocked, logic extracted)
 - ✅ Comprehensive unit tests written and passing

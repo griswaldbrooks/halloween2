@@ -11,39 +11,39 @@
  * - Hardware abstraction (works with any pin interface)
  * - Scalability (supports digital, PWM, multiple outputs, etc.)
  *
- * @tparam OutputPin Type that implements set(bool) method
+ * @tparam output_pin_t Type that implements set(bool) method
  *
  * Example Usage:
  *
  * // Hardware implementation
- * struct LEDPin {
+ * struct led_pin {
  *     void set(bool state) { digitalWrite(LED_PIN, state ? HIGH : LOW); }
  * };
- * LEDPin pin;
- * BlinkController<LEDPin> controller(pin, 1000, 500);
+ * led_pin pin;
+ * blink_controller<led_pin> controller(pin, 1000, 500);
  * controller.update(millis());  // All logic handled internally
  *
  * // Test implementation
- * struct MockPin {
+ * struct mock_pin {
  *     bool state = false;
  *     void set(bool s) { state = s; }
  * };
- * MockPin mock;
- * BlinkController<MockPin> controller(mock, 1000, 500);
+ * mock_pin mock;
+ * blink_controller<mock_pin> controller(mock, 1000, 500);
  * controller.update(0);
  * ASSERT_FALSE(mock.state);
  */
-template<typename OutputPin>
-class BlinkController {
+template<typename output_pin_t>
+struct blink_controller {
 public:
     /**
-     * @brief Construct a new Blink Controller
+     * @brief Construct a new blink controller
      *
      * @param output Reference to output pin interface
      * @param on_duration_ms How long LED stays on (milliseconds)
      * @param off_duration_ms How long LED stays off (milliseconds)
      */
-    BlinkController(OutputPin& output, uint32_t on_duration_ms, uint32_t off_duration_ms)
+    blink_controller(output_pin_t& output, uint32_t on_duration_ms, uint32_t off_duration_ms)
         : output_(output),
           on_duration_ms_(on_duration_ms),
           off_duration_ms_(off_duration_ms),
@@ -71,7 +71,7 @@ public:
         }
 
         // Determine if we should toggle
-        uint32_t target_duration = led_on_ ? on_duration_ms_ : off_duration_ms_;
+        uint32_t const target_duration = led_on_ ? on_duration_ms_ : off_duration_ms_;
 
         if (elapsed >= target_duration) {
             // Toggle the LED state
@@ -96,13 +96,13 @@ public:
     }
 
     // Getters for testing and state inspection
-    uint32_t getOnDuration() const { return on_duration_ms_; }
-    uint32_t getOffDuration() const { return off_duration_ms_; }
-    bool isOn() const { return led_on_; }
-    uint32_t getLastToggleTime() const { return last_toggle_time_ms_; }
+    uint32_t get_on_duration() const { return on_duration_ms_; }
+    uint32_t get_off_duration() const { return off_duration_ms_; }
+    bool is_on() const { return led_on_; }
+    uint32_t get_last_toggle_time() const { return last_toggle_time_ms_; }
 
 private:
-    OutputPin& output_;
+    output_pin_t& output_;
     uint32_t on_duration_ms_;
     uint32_t off_duration_ms_;
     uint32_t last_toggle_time_ms_;

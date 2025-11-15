@@ -7,7 +7,7 @@
  * Simulates millis() function from Arduino without real-time delays.
  * Allows tests to run instantly while simulating arbitrary time spans.
  */
-class MockTimer {
+struct mock_timer {
 public:
     /**
      * @brief Advance the mock time forward
@@ -39,7 +39,7 @@ public:
      *
      * @param time_ms Absolute time to set
      */
-    void setTime(uint32_t time_ms) {
+    void set_time(uint32_t time_ms) {
         current_time_ms_ = time_ms;
     }
 
@@ -53,7 +53,7 @@ private:
  * Simulates a digital output pin without actual hardware.
  * Captures state changes for verification in tests.
  */
-class MockPin {
+struct mock_pin {
 public:
     /**
      * @brief Set pin state
@@ -71,7 +71,7 @@ public:
      * @return true Pin is HIGH
      * @return false Pin is LOW
      */
-    bool getState() const {
+    bool get_state() const {
         return state_;
     }
 
@@ -82,7 +82,7 @@ public:
      *
      * @return uint32_t Number of set() calls
      */
-    uint32_t getToggleCount() const {
+    uint32_t get_toggle_count() const {
         return toggle_count_;
     }
 
