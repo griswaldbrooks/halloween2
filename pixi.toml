@@ -12,21 +12,18 @@ gcovr = ">=7.0"
 compilers = "*"
 python = ">=3.8"
 requests = ">=2.25"
+clang-format = ">=17.0"
 
 [tasks]
-# Phase 0: All examples (trivial_math, blink_led)
+# Phase 0: All examples (blink_led)
+# Phase 0.1 (trivial_math) validated and removed - superseded by blink_led
 test-all = "cmake -S. -B build/test -DBUILD_TESTS=ON && cmake --build build/test && ctest --test-dir build/test --output-on-failure"
-coverage-all = "cmake -S. -B build/coverage -DBUILD_TESTS=ON -DENABLE_COVERAGE=ON && cmake --build build/coverage && cd build/coverage && ctest && cd ../.. && mkdir -p coverage-html && gcovr -r . --sonarqube coverage.xml --html-details coverage-html/index.html --print-summary --exclude build --exclude '.*test.*' --exclude '.*main.cpp'"
+coverage-all = "cmake -S. -B build/coverage -DBUILD_TESTS=ON -DENABLE_COVERAGE=ON && cmake --build build/coverage && cd build/coverage && ctest && cd ../.. && mkdir -p coverage-html && gcovr -r . --gcov-ignore-errors=no_working_dir_found --sonarqube coverage.xml --html-details coverage-html/index.html --print-summary --exclude build --exclude '.*test.*' --exclude '.*main.cpp'"
 view-coverage-all = "xdg-open coverage-html/index.html"
-
-# Phase 0.1: trivial_math only (deprecated, use test-all)
-test-trivial = "cmake -S. -B build/test -DBUILD_TESTS=ON && cmake --build build/test && ctest --test-dir build/test --output-on-failure -R trivial"
-coverage-trivial = "cmake -S. -B build/coverage -DBUILD_TESTS=ON -DENABLE_COVERAGE=ON && cmake --build build/coverage && cd build/coverage && ctest -R trivial && cd ../.. && mkdir -p coverage-html && gcovr -r . --sonarqube coverage.xml --html-details coverage-html/index.html --print-summary --exclude build --exclude '.*test.*' --exclude '.*main.cpp'"
-view-coverage-trivial = "xdg-open coverage-html/index.html"
 
 # Phase 0.2: blink_led only
 test-blink = "cmake -S. -B build/test -DBUILD_TESTS=ON && cmake --build build/test && ctest --test-dir build/test --output-on-failure -R BlinkController"
-coverage-blink = "cmake -S. -B build/coverage -DBUILD_TESTS=ON -DENABLE_COVERAGE=ON && cmake --build build/coverage && cd build/coverage && ctest -R BlinkController && cd ../.. && mkdir -p coverage-html && gcovr -r . --sonarqube coverage.xml --html-details coverage-html/index.html --print-summary --exclude build --exclude '.*test.*' --exclude '.*main.cpp'"
+coverage-blink = "cmake -S. -B build/coverage -DBUILD_TESTS=ON -DENABLE_COVERAGE=ON && cmake --build build/coverage && cd build/coverage && ctest -R BlinkController && cd ../.. && mkdir -p coverage-html && gcovr -r . --gcov-ignore-errors=no_working_dir_found --sonarqube coverage.xml --html-details coverage-html/index.html --print-summary --exclude build --exclude '.*test.*' --exclude '.*main.cpp'"
 view-coverage-blink = "xdg-open coverage-html/index.html"
 demo-blink = "cmake -S. -B build/demo -DENABLE_COVERAGE=ON && cmake --build build/demo && ./build/demo/projects/examples/blink_led/blink_demo"
 
@@ -37,6 +34,10 @@ view-coverage = { depends-on = ["view-coverage-all"] }
 
 # Cleanup
 clean = "rm -rf build coverage-html coverage.xml"
+
+# Code formatting
+format-check = "find lib projects -name '*.cpp' -o -name '*.h' | xargs clang-format --dry-run --Werror"
+format-fix = "find lib projects -name '*.cpp' -o -name '*.h' | xargs clang-format -i"
 
 # Status checks (requires requests package and gh CLI)
 check-ci = "python tools/ci_check.py"

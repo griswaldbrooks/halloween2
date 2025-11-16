@@ -12,20 +12,21 @@ A clean-slate rewrite of the Halloween haunted house animatronics system with mo
 
 ## Current Phase: Phase 0 - Architecture Validation
 
-Implementing three example configurations to validate the complete toolchain:
+Implementing example configurations to validate the complete toolchain:
 
-1. **Pure C++ Library** (`lib/examples/trivial_math/`)
-   - Platform-agnostic logic library
-   - GoogleTest tests
-   - gcov/gcovr coverage reporting
-   - Target: 100% coverage
+1. **Pure C++ Library** - **✅ Validated and Removed**
+   - Originally `lib/examples/trivial_math/`
+   - Status: Validated toolchain (100% coverage, CI passing)
+   - Removed as scaffolding - superseded by blink_led
+   - Lessons preserved in docs/PHASE_0_EXAMPLES.md
 
 2. **C++ + Arduino (.ino)** (`projects/examples/blink_led/`)
    - Minimal .ino wrapper (<50 lines)
-   - C++ logic library
+   - C++ logic library with template-based dependency injection
    - Desktop tests for logic
    - Arduino compilation for hardware
    - Coverage for C++ components
+   - Status: ✅ Complete (100% coverage)
 
 3. **JavaScript + C++ + Arduino** (`projects/examples/web_trigger/`)
    - Node.js/Express server
@@ -34,10 +35,11 @@ Implementing three example configurations to validate the complete toolchain:
    - Jest tests (JavaScript)
    - GoogleTest tests (C++)
    - Dual-language coverage reporting
+   - Status: Not started
 
 ## Phase 0 Success Criteria
 
-- All 3 examples build successfully
+- 2/2 remaining examples build successfully
 - All tests pass (100%)
 - Coverage reports to SonarCloud (80%+ for all)
 - CI/CD runs all examples automatically
@@ -51,14 +53,17 @@ Implementing three example configurations to validate the complete toolchain:
 # Install dependencies via Pixi
 pixi install
 
-# Test trivial_math example (Phase 0.1)
-pixi run test-trivial
+# Run all tests (blink_led)
+pixi run test-all
 
 # Generate coverage report
-pixi run coverage-trivial
+pixi run coverage-all
 
 # View coverage locally
-xdg-open build/coverage/coverage-trivial/index.html
+pixi run view-coverage-all
+
+# Run blink_led demo
+pixi run demo-blink
 ```
 
 ## Repository Structure
@@ -67,12 +72,11 @@ xdg-open build/coverage/coverage-trivial/index.html
 halloween2/
 ├── lib/
 │   ├── animatronics_core/       # Future: Core libraries
-│   └── examples/                # Phase 0: Architecture validation
-│       └── trivial_math/        # Pure C++ example
+│   └── examples/                # Phase 0: Architecture validation (trivial_math removed)
 ├── projects/
 │   └── examples/                # Phase 0: Project patterns
-│       ├── blink_led/           # C++ + .ino example
-│       └── web_trigger/         # JS + C++ + .ino example
+│       ├── blink_led/           # C++ + .ino example (✅ Complete)
+│       └── web_trigger/         # JS + C++ + .ino example (Not started)
 ├── toolchains/                  # CMake toolchain files
 ├── docs/                        # Project documentation
 ├── pixi.toml                    # Environment management
@@ -132,14 +136,12 @@ All dependencies managed via Pixi - see `pixi.toml` for details.
 
 ## Current Status
 
-**Phase 0.1: trivial_math (Pure C++)**
-- Status: ✅ Complete
-- Implementation: ✅ 12 tests, all passing
-- Coverage: ✅ 100% (16/16 lines, 8/8 functions)
-- Pattern: Constexpr + runtime versions
-- Documentation: ✅ README with examples
-- CI/CD: ✅ Passing
-- SonarCloud: ✅ 100% coverage reported
+**Phase 0.1: trivial_math (Pure C++)** - **✅ Validated and Removed**
+- Status: ✅ Validated toolchain (CMake + GoogleTest + gcovr + SonarCloud)
+- Coverage achieved: 100% (16/16 lines, 8/8 functions)
+- Purpose: Scaffolding to validate build system before complex examples
+- Removed: Superseded by blink_led (which validates all the same patterns plus DI, hardware abstraction, Arduino integration)
+- Lessons: Preserved in docs/PHASE_0_EXAMPLES.md (compile_commands.json requirement, header-only coverage, constexpr runtime testing, gcovr path resolution)
 
 **Phase 0.2: blink_led (C++ + Arduino)**
 - Status: ✅ Complete

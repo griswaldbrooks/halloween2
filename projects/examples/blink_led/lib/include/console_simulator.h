@@ -1,8 +1,8 @@
 #pragma once
 #include <chrono>
-#include <string>
-#include <sstream>
 #include <cstdint>
+#include <sstream>
+#include <string>
 
 /**
  * @brief Console output pin with colored terminal display
@@ -29,7 +29,7 @@
  *   std::cout << pin.get_last_output() << std::endl;
  */
 struct console_led_pin {
-public:
+   public:
     /**
      * @brief Set LED state and generate formatted output
      *
@@ -40,8 +40,7 @@ public:
 
         // Get current timestamp
         auto now = std::chrono::steady_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(
-            now - start_time_);
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - start_time_);
 
         // Generate formatted output string (testable!)
         last_output_ = format_output(duration.count(), state_);
@@ -53,25 +52,19 @@ public:
      * @return true LED is ON
      * @return false LED is OFF
      */
-    bool get_state() const {
-        return state_;
-    }
+    bool get_state() const { return state_; }
 
     /**
      * @brief Reset the start time for timestamp display
      */
-    void reset_time() {
-        start_time_ = std::chrono::steady_clock::now();
-    }
+    void reset_time() { start_time_ = std::chrono::steady_clock::now(); }
 
     /**
      * @brief Get the last formatted output (for testing and display)
      *
      * @return std::string Formatted output with timestamp and state
      */
-    std::string get_last_output() const {
-        return last_output_;
-    }
+    std::string get_last_output() const { return last_output_; }
 
     /**
      * @brief Get current timestamp in milliseconds
@@ -80,8 +73,7 @@ public:
      */
     uint32_t get_current_timestamp_ms() const {
         auto now = std::chrono::steady_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(
-            now - start_time_);
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - start_time_);
         return static_cast<uint32_t>(duration.count());
     }
 
@@ -139,10 +131,9 @@ public:
         return result;
     }
 
-private:
+   private:
     bool state_ = false;
-    std::chrono::steady_clock::time_point start_time_ =
-        std::chrono::steady_clock::now();
+    std::chrono::steady_clock::time_point start_time_ = std::chrono::steady_clock::now();
     std::string last_output_;
 };
 
@@ -164,7 +155,7 @@ private:
  * - Focus on interface compliance, not absolute timing
  */
 struct real_time_timer {
-public:
+   public:
     real_time_timer() : start_time_(std::chrono::steady_clock::now()) {}
 
     /**
@@ -174,27 +165,22 @@ public:
      */
     uint32_t millis() const {
         auto now = std::chrono::steady_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(
-            now - start_time_);
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - start_time_);
         return static_cast<uint32_t>(duration.count());
     }
 
     /**
      * @brief Reset timer to zero
      */
-    void reset() {
-        start_time_ = std::chrono::steady_clock::now();
-    }
+    void reset() { start_time_ = std::chrono::steady_clock::now(); }
 
     /**
      * @brief Get start time (for testing)
      *
      * @return std::chrono::steady_clock::time_point The timer's start time
      */
-    std::chrono::steady_clock::time_point get_start_time() const {
-        return start_time_;
-    }
+    std::chrono::steady_clock::time_point get_start_time() const { return start_time_; }
 
-private:
+   private:
     std::chrono::steady_clock::time_point start_time_;
 };

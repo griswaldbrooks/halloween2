@@ -21,12 +21,13 @@ Build a production-ready animatronics system with:
 
 ### Three Required Examples
 
-1. **Pure C++ Library** (`lib/examples/trivial_math/`)
+1. **Pure C++ Library** (`lib/examples/trivial_math/`) - **✅ Validated and Removed**
    - Platform-agnostic business logic
    - GoogleTest tests achieving 100% coverage
    - gcov/gcovr coverage reporting
    - No hardware dependencies
-   - **Status:** In progress
+   - **Status:** Validated (100% coverage, CI passing). Removed as scaffolding - superseded by blink_led
+   - **Lessons:** See docs/PHASE_0_EXAMPLES.md for historical note
 
 2. **C++ + Arduino (.ino)** (`projects/examples/blink_led/`)
    - Minimal .ino file (<50 lines) as thin wrapper
@@ -34,7 +35,7 @@ Build a production-ready animatronics system with:
    - Desktop tests for C++ logic
    - Arduino compilation for hardware deployment
    - Coverage for C++ only (not .ino)
-   - **Status:** Not started
+   - **Status:** ✅ Complete (100% coverage, DI pattern validated)
 
 3. **JavaScript + C++ + Arduino** (`projects/examples/web_trigger/`)
    - Node.js/Express server with Socket.IO
@@ -67,11 +68,7 @@ halloween2/
 │   │   ├── servo_control/            # Servo abstractions
 │   │   └── timing/                   # Timing utilities
 │   └── examples/                     # Phase 0: Validation
-│       └── trivial_math/             # Pure C++ example
-│           ├── include/trivial_math.h
-│           ├── src/trivial_math.cpp  # (if needed)
-│           ├── test/test_trivial_math.cpp
-│           └── CMakeLists.txt
+│       # trivial_math (Phase 0.1) validated and removed - see blink_led
 ├── projects/
 │   └── examples/                     # Phase 0: Project patterns
 │       ├── blink_led/                # C++ + .ino
@@ -258,9 +255,27 @@ All projects that run on physical hardware must provide a way to verify function
 ### Code Quality
 - No SonarCloud bugs or vulnerabilities
 - Fix code smells when reasonable
-- Use clang-format for C++ (enforce east const, formatting)
+- Use clang-format for C++ (Google style with custom modifications)
 - Follow modern C++ patterns (RAII, smart pointers, constexpr)
 - **Apply coding style consistently** (east const, struct, snake_case)
+
+#### Code Formatting Workflow
+All C++ code must be formatted with clang-format before committing:
+
+```bash
+# Check if code is properly formatted (fails if not)
+pixi run format-check
+
+# Auto-format all C++ code
+pixi run format-fix
+```
+
+**Configuration**: See `.clang-format` for style rules (Google base with custom modifications)
+
+**Best Practices**:
+- Run `pixi run format-fix` before committing
+- Consider adding a pre-commit hook to enforce formatting
+- CI can optionally check formatting with `pixi run format-check`
 
 ### Documentation Hygiene
 - Keep minimal and focused (<10 markdown files ideal)
@@ -277,6 +292,8 @@ All projects MUST have standardized pixi tasks:
 - `pixi run test` - Run all unit tests
 - `pixi run coverage` - Generate code coverage report
 - `pixi run view-coverage` - Open coverage in browser
+- `pixi run format-check` - Check C++ code formatting (fails if not formatted)
+- `pixi run format-fix` - Auto-format all C++ code
 
 ### Example pixi.toml (trivial_math)
 ```toml
@@ -381,11 +398,11 @@ See [tools/MCP_INVESTIGATION.md](tools/MCP_INVESTIGATION.md) for investigation d
 
 ## Current Focus
 
-**Phase 0 Progress: 2 of 3 Examples Complete**
+**Phase 0 Progress: 1 of 2 Examples Complete (Phase 0.1 validated and removed)**
 
 **Completed:**
-- ✅ Phase 0.1 (trivial_math): 100% coverage, pattern documented
-- ✅ Phase 0.2 (blink_led): 100% coverage, DI pattern proven
+- ✅ Phase 0.1 (trivial_math): Validated toolchain (100% coverage, CI passing), removed as scaffolding
+- ✅ Phase 0.2 (blink_led): 100% coverage, DI pattern proven, reference example
 - ✅ Development tooling (sonarcloud_check, ci_check, status)
 - ✅ CI/CD pipeline working
 - ✅ SonarCloud integration verified
@@ -426,7 +443,7 @@ See `docs/CLEAN_SLATE_IMPLEMENTATION_PLAN.md` for:
 ## Success Metrics
 
 At completion of Phase 0:
-- 3/3 examples building
+- 2/2 remaining examples building (blink_led ✅, web_trigger pending)
 - 100% tests passing
 - 80%+ coverage reported to SonarCloud for each
 - CI/CD green for all examples

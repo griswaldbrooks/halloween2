@@ -8,42 +8,34 @@
  * Allows tests to run instantly while simulating arbitrary time spans.
  */
 struct mock_timer {
-public:
+   public:
     /**
      * @brief Advance the mock time forward
      *
      * @param milliseconds Time to advance in milliseconds
      */
-    void advance(uint32_t milliseconds) {
-        current_time_ms_ += milliseconds;
-    }
+    void advance(uint32_t milliseconds) { current_time_ms_ += milliseconds; }
 
     /**
      * @brief Get current mock time
      *
      * @return uint32_t Current time in milliseconds
      */
-    uint32_t millis() const {
-        return current_time_ms_;
-    }
+    uint32_t millis() const { return current_time_ms_; }
 
     /**
      * @brief Reset timer to zero
      */
-    void reset() {
-        current_time_ms_ = 0;
-    }
+    void reset() { current_time_ms_ = 0; }
 
     /**
      * @brief Set absolute time (useful for edge case testing)
      *
      * @param time_ms Absolute time to set
      */
-    void set_time(uint32_t time_ms) {
-        current_time_ms_ = time_ms;
-    }
+    void set_time(uint32_t time_ms) { current_time_ms_ = time_ms; }
 
-private:
+   private:
     uint32_t current_time_ms_ = 0;
 };
 
@@ -54,7 +46,7 @@ private:
  * Captures state changes for verification in tests.
  */
 struct mock_pin {
-public:
+   public:
     /**
      * @brief Set pin state
      *
@@ -71,9 +63,7 @@ public:
      * @return true Pin is HIGH
      * @return false Pin is LOW
      */
-    bool get_state() const {
-        return state_;
-    }
+    bool get_state() const { return state_; }
 
     /**
      * @brief Get number of times set() has been called
@@ -82,9 +72,7 @@ public:
      *
      * @return uint32_t Number of set() calls
      */
-    uint32_t get_toggle_count() const {
-        return toggle_count_;
-    }
+    uint32_t get_toggle_count() const { return toggle_count_; }
 
     /**
      * @brief Reset pin to initial state
@@ -94,7 +82,7 @@ public:
         toggle_count_ = 0;
     }
 
-private:
+   private:
     bool state_ = false;
     uint32_t toggle_count_ = 0;
 };

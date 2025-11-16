@@ -1,11 +1,13 @@
 #include <gtest/gtest.h>
-#include <thread>
+
 #include <chrono>
+#include <thread>
+
 #include "console_simulator.h"
 
 // Test fixture for console_led_pin tests
 struct console_led_pin_test : public ::testing::Test {
-protected:
+   protected:
     console_led_pin pin;
 };
 
@@ -185,7 +187,7 @@ TEST_F(console_led_pin_test, strip_ansi_codes_handles_empty_string) {
 
 // Test fixture for real_time_timer tests
 struct real_time_timer_test : public ::testing::Test {
-protected:
+   protected:
     real_time_timer timer;
 };
 

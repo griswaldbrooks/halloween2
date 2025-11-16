@@ -1,7 +1,8 @@
-#include <iostream>
-#include <thread>
 #include <chrono>
 #include <cstdint>
+#include <iostream>
+#include <thread>
+
 #include "blink_controller.h"
 #include "console_simulator.h"
 
@@ -52,7 +53,8 @@ void run_demo() {
     std::cout << "while console_led_pin handles the output presentation." << std::endl;
     std::cout << "\nThis demonstrates the power of dependency injection:" << std::endl;
     std::cout << "  - Same blink_controller logic works with different output types" << std::endl;
-    std::cout << "  - mock_pin for testing, console_led_pin for demo, hardware pins for production" << std::endl;
+    std::cout << "  - mock_pin for testing, console_led_pin for demo, hardware pins for production"
+              << std::endl;
     std::cout << "  - Zero runtime overhead (template-based static polymorphism)" << std::endl;
     std::cout << "  - 100% testable business logic\n" << std::endl;
 }

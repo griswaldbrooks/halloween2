@@ -2,13 +2,75 @@
 
 ## Overview
 
-Phase 0 validates the entire Halloween 2.0 toolchain with three trivial examples before migrating any legacy code. Each example demonstrates a critical configuration pattern needed for the full system.
+Phase 0 validates the entire Halloween 2.0 toolchain with example projects before migrating any legacy code. Each example demonstrates a critical configuration pattern needed for the full system.
 
 **Philosophy:** If we can't make trivial examples work, we can't make complex animatronics work. Validate the foundation first.
 
+## Phase 0.1: Pure C++ Library (trivial_math) - Historical Note
+
+**Status:** ✅ Validated and Removed (2025-11-16)
+
+**Purpose:** Validate CMake + GoogleTest + gcovr + SonarCloud integration with the simplest possible example.
+
+**Achievement:**
+- 100% test coverage (16/16 lines, 8/8 functions)
+- All tests passing (12 tests)
+- CI/CD pipeline working
+- SonarCloud coverage reporting verified
+- compile_commands.json generation validated
+
+**Key Lessons Learned:**
+
+1. **compile_commands.json is REQUIRED for SonarCloud CFamily sensor**
+   - Must set `CMAKE_EXPORT_COMPILE_COMMANDS=ON` in root CMakeLists.txt
+   - File must be at `build/compile_commands.json` (or path specified in sonar-project.properties)
+   - Without this, SonarCloud cannot analyze C++ code
+
+2. **Header-only libraries achieve coverage via test executable instantiation**
+   - Constexpr functions defined in headers get coverage when called at runtime in tests
+   - No need for separate .cpp files if logic is header-only
+   - gcov instruments the test binary, which includes header code
+
+3. **Constexpr functions are covered when called at runtime in tests**
+   - Compile-time evaluation doesn't generate coverage (no executable code)
+   - Runtime calls (e.g., in EXPECT_EQ) generate coverage data
+   - Both constexpr and runtime versions can coexist for flexibility
+
+4. **gcovr needs careful path resolution for correct coverage attribution**
+   - Use `--gcov-ignore-errors=no_working_dir_found` for build directory issues
+   - Exclude patterns: `--exclude build --exclude '.*test.*'`
+   - Run from project root for consistent path resolution
+
+5. **Constexpr + Runtime Pattern**
+   ```cpp
+   // ✅ Allows compile-time AND runtime use
+   constexpr int add(int a, int b) { return a + b; }
+
+   // Compile-time use
+   constexpr int result = add(2, 3);  // No coverage
+
+   // Runtime use (generates coverage)
+   EXPECT_EQ(add(2, 3), 5);  // ✅ Covered
+   ```
+
+**Why Removed:**
+
+Phase 0.2 (blink_led) validates **all** of the patterns trivial_math demonstrated, plus:
+- Template-based dependency injection
+- Hardware abstraction (OutputPin interface)
+- Arduino integration (.ino wrapper)
+- Console simulator (preview/demo application)
+- Mock implementations for testing
+
+trivial_math was **scaffolding** to validate the toolchain before building complex examples. Scaffolding complete, removed per "Documentation Hygiene" principle.
+
+**Reference:** See `projects/examples/blink_led/` for all validated patterns.
+
+---
+
 ## Success Criteria
 
-All three examples must achieve:
+Remaining examples must achieve:
 - Builds successfully (CMake configuration works)
 - Tests pass 100%
 - Coverage 80%+ (100% target for trivial code)
@@ -18,7 +80,10 @@ All three examples must achieve:
 
 **Timeline:** 2-3 weeks total
 
-## Example 1: Pure C++ Library (trivial_math)
+## Example 1: Pure C++ Library (trivial_math) - REFERENCE ONLY
+
+**NOTE:** This section preserved for reference. trivial_math has been validated and removed.
+See historical note above for lessons learned. Use blink_led as the current reference.
 
 **Purpose:** Validate platform-agnostic C++ library pattern
 

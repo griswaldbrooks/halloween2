@@ -1,9 +1,10 @@
 #include <gtest/gtest.h>
+
 #include "blink_controller.h"
 #include "mock_hardware.h"
 
 struct blink_controller_test : public ::testing::Test {
-protected:
+   protected:
     void SetUp() override {
         timer.reset();
         pin.reset();

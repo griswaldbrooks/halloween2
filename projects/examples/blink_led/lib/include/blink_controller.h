@@ -35,7 +35,7 @@
  */
 template<typename output_pin_t>
 struct blink_controller {
-public:
+   public:
     /**
      * @brief Construct a new blink controller
      *
@@ -101,7 +101,7 @@ public:
     bool is_on() const { return led_on_; }
     uint32_t get_last_toggle_time() const { return last_toggle_time_ms_; }
 
-private:
+   private:
     output_pin_t& output_;
     uint32_t on_duration_ms_;
     uint32_t off_duration_ms_;

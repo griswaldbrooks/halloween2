@@ -14,5 +14,5 @@ if(BUILD_TESTS)
 endif()
 
 # Phase 0 examples
-add_subdirectory(lib/examples/trivial_math)
+# Phase 0.1 (trivial_math) validated and removed - see docs/PHASE_0_EXAMPLES.md
 add_subdirectory(projects/examples/blink_led)
